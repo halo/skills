@@ -1,5 +1,5 @@
 ---
-name: research
+name: procedure-research
 description: Research. Official documentation, source-cited code — use when correctness on a framework or library matters.
 ---
 

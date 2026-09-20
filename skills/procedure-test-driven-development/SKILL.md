@@ -1,5 +1,5 @@
 ---
-name: test-driven-development
+name: procedure-test-driven-development
 description: Drives development with tests using the red-green-refactor loop. This is NOT about how to write tests, but a programming PATTERN to follow when writing tests before the code implementation/refactor.
 ---
 
