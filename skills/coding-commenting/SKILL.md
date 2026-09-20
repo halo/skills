@@ -35,6 +35,10 @@ Examples use `#`; adapt the syntax to the language.
 # The browser fires the `load` event before Stimulus's importmap modules finish.
 # Capybara returns from navigation before Stimulus starts.
 
+# Bad — history, not current implementation:
+# The service previously stored config at /etc/old.conf.
+# The service now stores config at /etc/new.conf.
+
 # Good — one sentence per line, clear roles:
 # Sometimes browser asset requests have no `Origin` header (e.g. CSS via <link>).
 # The backend (Rails) then omits `Access-Control-Allow-Origin` from its response.
@@ -51,6 +55,9 @@ Examples use `#`; adapt the syntax to the language.
 # We poll for `window.Stimulus` before each click.
 # Once Stimulus is defined, we proceed with the click.
 # Stimulus's event delegation listener catches the click and the action handler fires.
+
+# Good — current implementation only (no "previously"):
+# The service stores config at /etc/new.conf.
 ```
 
 ## Handling existing comments
