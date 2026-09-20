@@ -1,12 +1,11 @@
 ---
-name: commenting
+name: coding-commenting
 description: How to phrase code comments. Use when writing or reviewing comments in any file type.
 ---
 
 # Commenting
 
 These rules are language-agnostic and apply to every file type that carries comments.
-Examples use `#`; adapt the syntax to the language.
 
 ## Rules
 
@@ -20,6 +19,8 @@ Examples use `#`; adapt the syntax to the language.
   not vague ones like "it" or "the response header" that could refer to multiple layers.
 
 ## Examples
+
+Examples use `#`; adapt the syntax to the language.
 
 ```text
 # Bad — mid-sentence break:
@@ -51,3 +52,7 @@ Examples use `#`; adapt the syntax to the language.
 # Once Stimulus is defined, we proceed with the click.
 # Stimulus's event delegation listener catches the click and the action handler fires.
 ```
+
+## Red Flags
+
+- Commenting how code used to work, rather than the current implementation (e.g. "This used to connect over less performant HTTP but now it uses websockets.").

@@ -1,5 +1,5 @@
 ---
-name: ruby-code-style
+name: coding-ruby
 description: Ruby style conventions and patterns. Use when writing or reviewing Ruby in this codebase.
 ---
 
