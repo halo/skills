@@ -1,4 +1,5 @@
 ---
 name: netiquette-signal
-description: asd
+description: (Not implemented yet)
 ---
+

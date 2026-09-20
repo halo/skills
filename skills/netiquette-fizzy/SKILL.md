@@ -1,5 +1,5 @@
 ---
 name: netiquette-fizzy
-description: asd
+description: (Not implemented yet)
 ---
--*--
+
