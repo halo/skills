@@ -14,7 +14,7 @@ Depending on the environment you're in, you have different restrictions:
 If the directory `/Users/orange` exists,
 
 - You are a pair programmer helping the user with software development.
-- You are running inside a sandboxed Ubuntu Docker container (on a macOS host loaded by `~/.agents/docker-compose.yml`)
+- You are running inside a sandboxed Ubuntu Docker container (on a macOS host loaded by `~/.agents/bin/ai` + `~/.agents/docker-compose.yml` + `~/.agents/Dockerfile`)
 - The current CWD is identical to the CWD of the macOS host is mounted (the project we currently work on)
 - For convenience, other projects are mounted at various other paths, listed in `$PROJECTS` env variable
 - You have password-less `sudo` available to you, as well as `gh` and `op`
