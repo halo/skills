@@ -53,6 +53,10 @@ Examples use `#`; adapt the syntax to the language.
 # Stimulus's event delegation listener catches the click and the action handler fires.
 ```
 
+## Handling existing comments
+
+Never remove existing comments unless specifically asked to. These comments are likey human-made and thus serve a function. If unsure, leave them alone.
+
 ## Red Flags
 
 - Commenting how code used to work, rather than the current implementation (e.g. "This used to connect over less performant HTTP but now it uses websockets.").
