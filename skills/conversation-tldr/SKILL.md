@@ -117,3 +117,69 @@ No restart needed for Hermes (host-side), next bin/ai h/g/o will use new mounts.
   - mount it conditionally (`File.exist?('/Users/me/Code/2-Areas/skills/skills'`)
 ```
 
+#### BAD
+
+- WAY too long lines (human parsing impossible).
+- Retelling all actions is like an intern reporting what he did without adding value or solutions.
+- Listing the tests count is irrelevant ("Numbers:")
+- Too verbose "Need your call" section
+
+```
+3.4.8 runs the suite again, and the order/follow-up tests in our area are green.
+
+The 3.4.8 crashes weren't Ruby — they were corrupt native extensions in ~/.gem: msgpack, date (this was the real segfault: Date.new inside creek/book.rb), then puma→nio4r. gem pristine per gem, finally gem
+pristine --all, fixed it. Two more environment repairs were needed: ~/.gem/bin/ruby was missing so every binstub was dead (bundle exec in rake tasks, rubocop) — symlinked to the mise 3.4.8 ruby; and the CSS
+builds were absent, so every page 500'd with Propshaft::MissingAssetError — rails assets:build:css. .ruby-version stays 3.4.8; my bundle install only rewrote the lock's ruby/BUNDLED WITH lines back to 3.4.8 /
+4.0.10.
+
+Fixed
+
+• The dead admin follow-up system test (screen, controller and route are gone) and the two dead admin routes (follow_up, assignment) — both admin controllers had already been deleted.
+• Three admin views still linked to the removed admin assignment route (order _attributes, order _table, the waiting-for-assignment banner) → now the Meister screen via Core::Router::Url.for, like the
+navigation.
+• Meister follow-ups: with the redirect gone, an unassigned order hit the view's elsif and rendered an empty card title → falls back to the "du" wording. Test grown to 10 (renders, unassigned, other commander,
+Heute/Morgen, today, past, far-future ± comment, within a week, bypass).
+• overdue_assignment_test was time-of-day flaky — "wartet gestern" flips to "seit 2 Tagen" after noon; frozen at 10:00 with travel_to.
+• Admin quotations controller test posted no follow_up_at, which is required on Quotation now → added.
+• fixtures :all on the two Rack files that died on the DB-default company (orders_test RackTests, pay_in_advances).
+
+Numbers: meister integration + models/validators 306 runs / 0 failures; meister + admin Rack system tests 5+5+2+9+1 all green; whole test/integration 209 runs with 2 failures, both ConnectorIntegrationTest DDNS  │
+(502 from the external service).
+
+Warn
+
+• That FK failure is systemic, not local: orders.company_id/quotations.company_id carry a DB default (aeb1ceaf…) that only your new default_company fixture supplies, and 18 more system/integration files create
+orders/quotations without fixtures :all. fixtures :all per file is what fixed my two, but it also changes what those legacy tests see (empty listings, etc.).
+• Browser-based system tests can't start: the ruby client asks for chromium_headless_shell-1234, the cache has 1243, npx playwright is 1.62.1.
+
+Need your call
+
+• For those 18 files: fixtures :all each, or give the order/quotation factories a company { ::Core::Company.first || create(:company) } like the commander factory?
+• I found no test that depended on the order form's follow_up_at field — if you saw a specific one fail, point me at it.
+```
+
+#### GOOD
+
+- Do not mention normal setup steps (rebuilding gems, compiling assets)
+- Mentions unorthodox solutions (symlinking ~/.gem/bin/ruby is a hack that needs to be reported)
+- Differentiates test setup problems from code problems (important to know, did you try to appease the tests, or were the tests wrong?)
+
+```
+# What I did
+
+- Tried Ruby `4.0.10` instead of `3.4.8`
+- Tests related to our feature are green, (no browser tests, though, many others failed)
+- Had to hack symlinks (`~/.gem/bin/ruby`)
+
+# Tests I fixed
+
+- Fixed links in views (routes pointing to the admin namespace rather than meister)
+- Fixed controllers not accepting required parameters
+- Some tests were flaky, but freezing time helped
+- Some tests were missing `fixtures :all`, I added it
+
+# Problems where I need your feedback
+
+- There is a mismatch with the fixtures for company_id, that would need cleanup (not DRY)
+- Playwright/Chromium has a version update problem, should I try to fix it myself?
+```
