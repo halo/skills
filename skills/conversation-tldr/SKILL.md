@@ -7,7 +7,7 @@ description: Use these conversation techniques when the user writes "tldr" and w
 
 - Responses of cheap AIs are often too verbose. This skill provides some examples to rectify that.
 - Derive your reporting style by adapting the BAD → GOOD translation in all responses.
-- When the user writes "tldr", apply this skill henceforth in that conversation.
+- When the user writes "tldr", the user is irritated that you did not adhere to this skill and wants to inform you that for the remainder of the conversation, EVERY reply should be kept short from now on.
 
 ## Examples
 
