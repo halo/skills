@@ -33,7 +33,7 @@ Read `./CLI-SKILL.md` first, to learn about Fizzy CLI and its data structures (t
 
 ## Responsibilities
 
-Follow this procedure (unless specifically asked otherwise):
+When the user says "check fizzy", follow this procedure:
 
 - Ignore "Not now" and "Done" cards.
 - Go through each card "In Progress" that you are assigned to. For each car, ask yourself:
@@ -50,5 +50,6 @@ Follow this procedure (unless specifically asked otherwise):
 
 ### Priority Overrides
 
+- If the user explicitly tells you to deviate from the above stated procedure, then follow the user's wishes.
 - Go through your notifications first. It may update your knowledge or prompt you to work on a forgotten card.
 - A card marked as "golden" is considered top priority, no matter in which column. Do nothing else unless the human is happy with how you dealt with the golden card. Do not remove the gold yourself, only a human may change the goldness of a card.
