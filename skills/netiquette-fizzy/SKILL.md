@@ -31,6 +31,14 @@ Read `./CLI-SKILL.md` first, to learn about Fizzy CLI and its data structures (t
 - Comments MUST be *meaningful* and adhere to the `../conversation-tldr/SKILL.md` style.
 - Use comments sparingly, try to re-use comments whenever possible (e.g. when your's is the last comment), to not add more and more comments.
 
+### Cards are assistant memory
+
+- Fizzy cards are primarily the assistant's working memory and decision log, not a list of deliverables to hand back to the human.
+- "Track this in Fizzy" means preserve the thread in the most relevant existing card. It does **not** mean create a new card by default.
+- Before creating a card, search the current board and reuse the closest existing card. Create a new card only when the human explicitly asks for one or when no existing card can hold a genuinely separate, durable thread.
+- When several assistant-created cards describe the same thread, consolidate into the oldest relevant card and delete the duplicates. Never delete a card created by the human without explicit permission.
+- Do not describe a card as completed merely because the assistant made changes. The human decides when work is done; report evidence and remaining uncertainty instead.
+
 ### Examples
 
 ```
@@ -39,8 +47,8 @@ Live-call evidence: in call 35836a4d, the request to speak English produced an i
 ```
 
 ```
-# GOOD (Everything the user needs to know, plus proactive stance on issues with high certainty of how to solve it)
-The LLM could not switch to English because it had no permissions to write to the preferences file. Fixing the permissions right now (tracking in https://app.fizzy.do/6181285/cards/107)...
+# GOOD (Everything the user needs to know, without creating a duplicate card)
+The LLM could not switch to English because it could not write the caller's preferences. I am fixing that in the existing [dynamic speech card](https://app.fizzy.do/6181285/cards/103).
 ```
 
 ```
@@ -52,8 +60,8 @@ AI replies: "Inspected the last three real calls: 35836a4d (German→English req
 
 ```
 # GOOD
-Card title: "Telephony: Robust test regressions"
-AI reply: "Inspected the last three real calls (language switching). I'll figure out why the SST took 3.7 seconds.
+Card title: "Telephony: real SIP regression matrix"
+AI reply: "The last real calls exposed unstable turn commitment. I am narrowing that regression here.
 ```
 
 ## Responsibilities
