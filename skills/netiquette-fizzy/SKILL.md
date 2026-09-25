@@ -46,21 +46,9 @@ For a milestone or blocker comment:
 2. Add no more than two or three bullets describing the user-visible behavior or decision.
 3. Continue with the next actionable step when one remains; mention an unresolved item only when it is a genuine blocker or requires a human decision.
 
-Keep the comment short enough to scan, normally no more than three paragraphs or about 80 words. This is a length target, not a line-width rule. Summarize verification at the level that changes confidence: for example, say that automated coverage is green or that live verification remains open. Include commands, paths, identifiers, timings, and assertion counts only when they are needed to reproduce a problem or make a decision. Never claim behavior that the cited observation or test does not establish. Do not write “Completed” or “Done” as a comment; the card state records that.
+Keep the comment short enough to scan, normally no more than three paragraphs or about 80 words. This is a length target, not a line-width rule. Summarize verification at the level that changes confidence: for example, say that automated coverage is green or that live verification is the next action. Include commands, paths, identifiers, timings, and assertion counts only when they are needed to reproduce a problem or make a decision. Never claim behavior that the cited observation or test does not establish. Do not write “Completed” or “Done” as a comment; the card state records that.
 
-```text
-# BAD
-Ran the entire test command from directory X; it produced N runs, M assertions,
-zero failures, and this exact log line: ...
-
-# GOOD
-Import retry handling is working in automated coverage.
-
-- Transient failures are retried and successful imports stop retrying.
-- The retry decision is now recorded in the card's implementation contract.
-
-Live verification remains open.
-```
+Read [EXAMPLES.md](./EXAMPLES.md) whenever you write or review a Fizzy comment.
 
 ### Cards are assistant memory
 
@@ -69,40 +57,14 @@ Live verification remains open.
 - Before creating a card, search the current board and reuse the closest existing card. Create a new card only when the human explicitly asks for one or when no existing card can hold a genuinely separate, durable thread.
 - When several assistant-created cards describe the same thread, consolidate into the oldest relevant card and delete the duplicates. Never delete a card created by the human without explicit permission.
 
-### Examples
-
-```
-# BAD (Too many details, not actionable)
-Live-call evidence: in call 35836a4d, the request to speak English produced an inability response. An isolated Qwen run then called the installed language tool, but the plugin returned a read-only SQLite error because /home/phone/telephony/preferences.sqlite3 is phone:phone 0644. See new cards 107 and 108 for the two separate failures.
-
-# GOOD (Everything the user needs to know, plus proactive stance on issues with high certainty of how to solve it)
-The LLM could not switch to English because it had no permissions to write to the preferences file. Fixing the permissions right now (tracking in https://app.fizzy.do/6181285/cards/107)...
-```
-
-```
-# BAD (Not informative enough for a comment and does not even relate to previous comments)
-Card title: "Telephony: real SIP regression matrix"
-Human comments: "Do we want "I am waiting"? How is it triggered? Whats the mechanism?"
-AI replies: "Inspected the last three real calls: 35836a4d (German→English request, no language change), 88494445 (interim Wie ist das weg? corrected to Wie ist das Wetter in Berlin?), and 5e006e14 (duplicate favorite-color transcript). SST calls took 2.4–3.7 seconds and every call ended with transport EOF after the caller disconnected."
-
-# GOOD
-Card title: "Telephony: Robust test regressions"
-AI reply: "Inspected the last three real calls (language switching). I'll figure out why the SST took 3.7 seconds.
-```
-
-```
-# BAD (wrong level of abstraction, no empty lines in between paragraphs)
-Verification evidence: dispatcher go test ./... is green. test/bin/unit is 22 runs, 76 assertions, 0 failures, errors, or skips. The real SIP hang-up case test/bin/system --name=/test_one_call_hangs_up_when_the_model_is_asked/ is 1 run, 6 assertions, 0 failures, errors, or skips. The call audit identified one terminal outcome: the model requested hang-up, actor model, reason phone_hangup; no late provider speech occurred
-
-# GOOD (summarization )
-Unit and system tests are green (real SIP calls).
-
-Two issues resolved:
-- The assistant now says "Good bye" before hanging up.
-- After hangup, the LLM doesn't attempt to speak any further.
-```
-
 ## Responsibilities
+
+### One-card work loop
+
+- Work on one actionable card at a time. Before acting, assign yourself and move the card to "In Progress".
+- Continue working while an actionable next step remains; do not stop merely to announce that step.
+- When you stop working, unassign yourself. If nobody is actively working on the card, it belongs in "Maybe".
+- Close the card only after its acceptance condition is met and the evidence is recorded.
 
 When the user says "check fizzy", follow this procedure:
 
@@ -116,11 +78,11 @@ When the user says "check fizzy", follow this procedure:
   - Am I assigned? Then check if it's the right column and move it to the correct column if needed.
   - Are there open questions?
     - What that means is, are there ANY open questions in the card body, steps, or comments? (The card body might be updated with more/new questions!)
-    - Then use the `../procedure-research-skill/SKILL.md` to deliver actionable answers
+    - Then use the `../procedure-research/SKILL.md` to deliver actionable answers
   - Am I idle and could work on this? Then move it to "In Progress"
 
 ### Priority Overrides
 
 - If the user explicitly tells you to deviate from the above stated procedure, then follow the user's wishes.
-- Go through your notifications first. It may update your knowledge or prompt you to work on a forgotten card.
+- Go through your notifications first. They may update your knowledge or prompt you to work on a forgotten card, but treat them as context: the current board and card state are authoritative.
 - A card marked as "golden" is considered top priority, no matter in which column. Do nothing else unless the human is happy with how you dealt with the golden card. Do not remove the gold yourself, only a human may change the goldness of a card.
