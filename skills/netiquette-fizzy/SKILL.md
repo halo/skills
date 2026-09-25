@@ -31,6 +31,13 @@ Read `./CLI-SKILL.md` first, to learn about Fizzy CLI and its data structures (t
 - Comments MUST be *meaningful* and adhere to the `../conversation-tldr/SKILL.md` style.
 - Use comments sparingly, try to re-use comments whenever possible (e.g. when your's is the last comment), to not add more and more comments.
 
+### Cards are assistant memory
+
+- Fizzy cards are primarily the assistant's working memory and decision log, not a list of deliverables to hand back to the human.
+- "Track this in Fizzy" means preserve the thread in the most relevant existing card. It does **not** mean create a new card by default.
+- Before creating a card, search the current board and reuse the closest existing card. Create a new card only when the human explicitly asks for one or when no existing card can hold a genuinely separate, durable thread.
+- When several assistant-created cards describe the same thread, consolidate into the oldest relevant card and delete the duplicates. Never delete a card created by the human without explicit permission.
+
 ### Examples
 
 ```
