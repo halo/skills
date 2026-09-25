@@ -31,6 +31,37 @@ Read `./CLI-SKILL.md` first, to learn about Fizzy CLI and its data structures (t
 - Comments MUST be *meaningful* and adhere to the `../conversation-tldr/SKILL.md` style.
 - Use comments sparingly, try to re-use comments whenever possible (e.g. when your's is the last comment), to not add more and more comments.
 
+### Comment decision
+
+Write a comment only when it does one of these jobs:
+
+- Answers a human question.
+- Records a plan that needs to remain in the card.
+- Records a meaningful milestone or blocker.
+- Otherwise, do not comment; assignment, column movement, and closure are already visible in the card state.
+
+For a milestone or blocker comment:
+
+1. Lead with the outcome or blocker in one sentence.
+2. Add no more than two or three bullets describing the user-visible behavior or decision.
+3. Continue with the next actionable step when one remains; mention an unresolved item only when it is a genuine blocker or requires a human decision.
+
+Keep the comment short enough to scan, normally no more than three paragraphs or about 80 words. This is a length target, not a line-width rule. Summarize verification at the level that changes confidence: for example, say that automated coverage is green or that live verification remains open. Include commands, paths, identifiers, timings, and assertion counts only when they are needed to reproduce a problem or make a decision. Never claim behavior that the cited observation or test does not establish. Do not write “Completed” or “Done” as a comment; the card state records that.
+
+```text
+# BAD
+Ran the entire test command from directory X; it produced N runs, M assertions,
+zero failures, and this exact log line: ...
+
+# GOOD
+Import retry handling is working in automated coverage.
+
+- Transient failures are retried and successful imports stop retrying.
+- The retry decision is now recorded in the card's implementation contract.
+
+Live verification remains open.
+```
+
 ### Cards are assistant memory
 
 - Fizzy cards are primarily the assistant's working memory and decision log, not a list of deliverables to hand back to the human.
