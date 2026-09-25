@@ -175,6 +175,22 @@ require_relative 'scheduler/config'
 require_relative 'scheduler/enqueue'
 ```
 
+### Scripts Fail Loudly
+
+A script either does its job or dies — there is no third path of continuing with a `nil`.
+
+- Never guard a required file, secret, argument or command (`File.exist?`, `|| ''`, `&.`, `rescue nil`) and then carry on with a `false`/`nil` value.
+- Bail where the failure happens; the exception naming the missing path or value is the error report.
+- `warn` plus a fallback only with a reason that survives review.
+
+```ruby
+# Bad — reads nothing, the failure surfaces later as a nil somewhere else
+token = File.read('/run/secrets/op_token') if File.exist?('/run/secrets/op_token')
+
+# Good — raises ENOENT and names the file
+token = File.read('/run/secrets/op_token')
+```
+
 ## Keyword-Argument Forwarding (Ruby 3.0+)
 
 When a keyword argument name exactly matches the variable being passed, use the short-hand `name:` syntax. Never repeat the same identifier twice.
