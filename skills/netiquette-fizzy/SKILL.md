@@ -31,6 +31,31 @@ Read `./CLI-SKILL.md` first, to learn about Fizzy CLI and its data structures (t
 - Comments MUST be *meaningful* and adhere to the `../conversation-tldr/SKILL.md` style.
 - Use comments sparingly, try to re-use comments whenever possible (e.g. when your's is the last comment), to not add more and more comments.
 
+### Examples
+
+```
+# BAD (Too many details, not actionable)
+Live-call evidence: in call 35836a4d, the request to speak English produced an inability response. An isolated Qwen run then called the installed language tool, but the plugin returned a read-only SQLite error because /home/phone/telephony/preferences.sqlite3 is phone:phone 0644. See new cards 107 and 108 for the two separate failures.
+```
+
+```
+# GOOD (Everything the user needs to know, plus proactive stance on issues with high certainty of how to solve it)
+The LLM could not switch to English because it had no permissions to write to the preferences file. Fixing the permissions right now (tracking in https://app.fizzy.do/6181285/cards/107)...
+```
+
+```
+# BAD (Not informative enough for a comment and does not even relate to previous comments)
+Card title: "Telephony: real SIP regression matrix"
+Human comments: "Do we want "I am waiting"? How is it triggered? Whats the mechanism?"
+AI replies: "Inspected the last three real calls: 35836a4d (German→English request, no language change), 88494445 (interim Wie ist das weg? corrected to Wie ist das Wetter in Berlin?), and 5e006e14 (duplicate favorite-color transcript). SST calls took 2.4–3.7 seconds and every call ended with transport EOF after the caller disconnected."
+```
+
+```
+# GOOD
+Card title: "Telephony: Robust test regressions"
+AI reply: "Inspected the last three real calls (language switching). I'll figure out why the SST took 3.7 seconds.
+```
+
 ## Responsibilities
 
 When the user says "check fizzy", follow this procedure:
