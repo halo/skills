@@ -43,9 +43,7 @@ Read `./CLI-SKILL.md` first, to learn about Fizzy CLI and its data structures (t
 ```
 # BAD (Too many details, not actionable)
 Live-call evidence: in call 35836a4d, the request to speak English produced an inability response. An isolated Qwen run then called the installed language tool, but the plugin returned a read-only SQLite error because /home/phone/telephony/preferences.sqlite3 is phone:phone 0644. See new cards 107 and 108 for the two separate failures.
-```
 
-```
 # GOOD (Everything the user needs to know, plus proactive stance on issues with high certainty of how to solve it)
 The LLM could not switch to English because it had no permissions to write to the preferences file. Fixing the permissions right now (tracking in https://app.fizzy.do/6181285/cards/107)...
 ```
@@ -55,12 +53,22 @@ The LLM could not switch to English because it had no permissions to write to th
 Card title: "Telephony: real SIP regression matrix"
 Human comments: "Do we want "I am waiting"? How is it triggered? Whats the mechanism?"
 AI replies: "Inspected the last three real calls: 35836a4d (German→English request, no language change), 88494445 (interim Wie ist das weg? corrected to Wie ist das Wetter in Berlin?), and 5e006e14 (duplicate favorite-color transcript). SST calls took 2.4–3.7 seconds and every call ended with transport EOF after the caller disconnected."
-```
 
-```
 # GOOD
 Card title: "Telephony: Robust test regressions"
 AI reply: "Inspected the last three real calls (language switching). I'll figure out why the SST took 3.7 seconds.
+```
+
+```
+# BAD (wrong level of abstraction, no empty lines in between paragraphs)
+Verification evidence: dispatcher go test ./... is green. test/bin/unit is 22 runs, 76 assertions, 0 failures, errors, or skips. The real SIP hang-up case test/bin/system --name=/test_one_call_hangs_up_when_the_model_is_asked/ is 1 run, 6 assertions, 0 failures, errors, or skips. The call audit identified one terminal outcome: the model requested hang-up, actor model, reason phone_hangup; no late provider speech occurred
+
+# GOOD (summarization )
+Unit and system tests are green (real SIP calls).
+
+Two issues resolved:
+- The assistant now says "Good bye" before hanging up.
+- After hangup, the LLM doesn't attempt to speak any further.
 ```
 
 ## Responsibilities
