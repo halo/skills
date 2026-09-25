@@ -1,1 +1,5 @@
 .DS_Store
+
+# These are sibling skill sources mounted below this host-level catalog.
+/ensons
+/openclaw
