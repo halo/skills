@@ -10,10 +10,14 @@ Ran the entire test command from directory X; it produced N runs, M assertions,
 zero failures, and this exact log line: ...
 
 # GOOD
+### Outcome
+
 Import retry handling is working in automated coverage.
 
 - Transient failures are retried and successful imports stop retrying.
 - The retry decision is now recorded in the card's implementation contract.
+
+### Next
 
 I’m running live verification now.
 ```
@@ -37,8 +41,11 @@ Human comments: "Do we want \"I am waiting\"? How is it triggered? What's the me
 AI replies: "Inspected the last three real calls: 35836a4d (German→English request, no language change), 88494445 (interim Wie ist das weg? corrected to Wie ist das Wetter in Berlin?), and 5e006e14 (duplicate favorite-color transcript). SST calls took 2.4–3.7 seconds and every call ended with transport EOF after the caller disconnected."
 
 # GOOD
+### Finding
+
 Card title: "Telephony: Robust test regressions"
-AI reply: "Inspected the last three real calls (language switching). I'll figure out why the SST took 3.7 seconds."
+
+Inspected the last three real calls involving language switching. The SST took up to 3.7 seconds; I’m tracing that delay now.
 ```
 
 ## Summarize verification
@@ -48,6 +55,8 @@ AI reply: "Inspected the last three real calls (language switching). I'll figure
 Verification evidence: dispatcher go test ./... is green. test/bin/unit is 22 runs, 76 assertions, 0 failures, errors, or skips. The real SIP case test/bin/system --name=/test_one_call_hangs_up_when_the_model_is_asked/ is 1 run, 6 assertions, 0 failures, errors, or skips. The call audit identified one terminal outcome: the model requested hang-up, actor model, reason phone_hangup; no late provider speech occurred.
 
 # GOOD
+### Verification
+
 Unit and system tests are green (real SIP calls).
 
 Two issues resolved:
