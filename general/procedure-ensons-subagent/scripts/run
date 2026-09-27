@@ -1,0 +1,157 @@
+#!/usr/bin/env ruby
+
+require "json"
+require "optparse"
+require "open3"
+require "securerandom"
+require "tempfile"
+
+BEDROCK = "/data/bedrock"
+HCLOUD = "/home/devops/.local/bin/hcloud"
+PLAYBOOK = "#{BEDROCK}/ansible/playbooks/agents.yml"
+SSH_KEY_REFERENCE = "op://agent-computer/SSH Key/private key?ssh-format=openssh"
+
+options = {
+  name: "ensons-test-#{Time.now.utc.strftime("%Y%m%d%H%M%S")}-#{SecureRandom.hex(3)}",
+  server_type: "cpx32",
+  image: "ubuntu-24.04",
+  location: "fsn1",
+  firewall: "11690281",
+  revision: "master"
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: scripts/run --env-file PATH [options]"
+  opts.on("--env-file PATH", "Controller-side .env.test file") { |value| options[:env_file] = value }
+  opts.on("--revision REVISION", "Git revision to test (default: master)") { |value| options[:revision] = value }
+  opts.on("--name NAME", "Temporary server name") { |value| options[:name] = value }
+  opts.on("--server-type TYPE", "Hetzner server type (default: cpx32)") { |value| options[:server_type] = value }
+  opts.on("--image IMAGE", "Hetzner image (default: ubuntu-24.04)") { |value| options[:image] = value }
+  opts.on("--location LOCATION", "Hetzner location (default: fsn1)") { |value| options[:location] = value }
+  opts.on("--firewall ID", "Hetzner firewall (default: 11690281)") { |value| options[:firewall] = value }
+end
+
+begin
+  parser.parse!
+rescue OptionParser::ParseError => error
+  warn error.message
+  warn parser
+  exit 2
+end
+
+abort "--env-file must point to a readable file" unless options[:env_file] && File.file?(options[:env_file]) && File.readable?(options[:env_file])
+abort "Run this helper as devops so the hcloud and op shims use their intended identity" if Process.uid.zero?
+
+def capture!(*command)
+  stdout, stderr, status = Open3.capture3(*command)
+  return stdout if status.success?
+
+  warn stderr unless stderr.empty?
+  raise "command failed (#{status.exitstatus}): #{command.join(" ")}"
+end
+
+def stream!(*command, env: {})
+  success = system(env, *command)
+  raise "command failed: #{command.join(" ")}" unless success
+end
+
+def wait_for_ansible(ping)
+  deadline = Time.now + 180
+
+  loop do
+    _stdout, _stderr, status = Open3.capture3(*ping)
+    return if status.success?
+    raise "SSH did not become ready within 180 seconds" if Time.now >= deadline
+
+    sleep 3
+  end
+end
+
+server_id = nil
+inventory = nil
+key_file = nil
+
+Signal.trap("INT") { raise Interrupt }
+Signal.trap("TERM") { raise Interrupt }
+
+begin
+  created = JSON.parse(capture!(HCLOUD, "server", "create",
+    "--name", options[:name],
+    "--type", options[:server_type],
+    "--image", options[:image],
+    "--location", options[:location],
+    "--firewall", options[:firewall],
+    "--ssh-key", "agent-computer",
+    "--ssh-key", "orange.halo.hetzner.de",
+    "--output", "json",
+    "--quiet"))
+
+  server = created.fetch("server")
+  server_id = server.fetch("id").to_s
+  address = server.dig("public_net", "ipv4", "ip")
+  raise "hcloud did not return a public IPv4 address" unless address
+  puts "created temporary server #{server_id} (#{address})"
+
+  inventory = Tempfile.new(["ensons-test-", ".ini"])
+  inventory.write("[agent]\nensons_test ansible_host=#{address}\n")
+  inventory.close
+
+  key_file = Tempfile.new(["agent-computer-", ".key"])
+  key_file.close
+  File.chmod(0o600, key_file.path)
+  key_material = capture!("op", "read", "--force", SSH_KEY_REFERENCE)
+  File.open(key_file.path, "w", 0o600) { |file| file.write(key_material) }
+
+  ansible_env = {
+    "ANSIBLE_CONFIG" => "#{BEDROCK}/ansible/ansible.cfg",
+    "ANSIBLE_ROLES_PATH" => "#{BEDROCK}/ansible/roles",
+    "ANSIBLE_HOST_KEY_CHECKING" => "False"
+  }
+  secrets = ["sudo", "-n", "#{BEDROCK}/bin/secrets", "--agents", "--", "env"]
+  ansible_prefix = [
+    *secrets,
+    *ansible_env.map { |name, value| "#{name}=#{value}" },
+  ]
+  ping = [
+    *ansible_prefix,
+    "ansible", "-i", inventory.path, "-u", "root", "--private-key", key_file.path,
+    "ensons_test", "-m", "ping"
+  ]
+  ansible = [
+    *ansible_prefix,
+    "ansible-playbook", "-i", inventory.path, "-u", "root", "--private-key", key_file.path,
+    "--tags", "ensons_test",
+    "--extra-vars", "ensons_test=true",
+    "--extra-vars", "ensons_test_env_file=#{options[:env_file]}",
+    "--extra-vars", "ensons_test_revision=#{options[:revision]}",
+    PLAYBOOK
+  ]
+
+  puts "waiting for SSH on #{address}"
+  wait_for_ansible(ping)
+  puts "running Bedrock Ansible against #{address}"
+  stream!(*ansible)
+rescue Interrupt
+  warn "interrupted"
+  exit 130
+ensure
+  [key_file, inventory].each do |temporary_file|
+    next unless temporary_file
+
+    begin
+      temporary_file.unlink
+    rescue StandardError => error
+      warn "could not remove temporary file #{temporary_file.path}: #{error.message}"
+    end
+  end
+  if server_id
+    begin
+      stream!(HCLOUD, "server", "delete", server_id)
+      puts "deleted temporary server #{server_id}"
+    rescue StandardError => error
+      warn "could not delete temporary server #{server_id}: #{error.message}"
+      warn "Delete it with: #{HCLOUD} server delete #{server_id}"
+      exit 1
+    end
+  end
+end
