@@ -5,6 +5,7 @@ require "optparse"
 require "open3"
 require "securerandom"
 require "tempfile"
+require "time"
 
 BEDROCK = "/data/bedrock"
 HCLOUD = "/home/devops/.local/bin/hcloud"
@@ -17,7 +18,8 @@ options = {
   image: "ubuntu-24.04",
   location: "fsn1",
   firewall: "11690281",
-  revision: "master"
+  revision: "master",
+  delete_if_billable: false
 }
 
 parser = OptionParser.new do |opts|
@@ -29,6 +31,7 @@ parser = OptionParser.new do |opts|
   opts.on("--image IMAGE", "Hetzner image (default: ubuntu-24.04)") { |value| options[:image] = value }
   opts.on("--location LOCATION", "Hetzner location (default: fsn1)") { |value| options[:location] = value }
   opts.on("--firewall ID", "Hetzner firewall (default: 11690281)") { |value| options[:firewall] = value }
+  opts.on("--delete-if-billable", "Delete the server at cleanup only after the first billable hour") { options[:delete_if_billable] = true }
 end
 
 begin
@@ -68,6 +71,7 @@ def wait_for_ansible(ping)
 end
 
 server_id = nil
+server_created_at = nil
 inventory = nil
 key_file = nil
 
@@ -88,6 +92,7 @@ begin
 
   server = created.fetch("server")
   server_id = server.fetch("id").to_s
+  server_created_at = Time.parse(server.fetch("created"))
   address = server.dig("public_net", "ipv4", "ip")
   raise "hcloud did not return a public IPv4 address" unless address
   puts "created temporary server #{server_id} (#{address})"
@@ -144,7 +149,7 @@ ensure
       warn "could not remove temporary file #{temporary_file.path}: #{error.message}"
     end
   end
-  if server_id
+  if server_id && options[:delete_if_billable] && server_created_at && Time.now >= server_created_at + 3600
     begin
       stream!(HCLOUD, "server", "delete", server_id)
       puts "deleted temporary server #{server_id}"
@@ -153,5 +158,8 @@ ensure
       warn "Delete it with: #{HCLOUD} server delete #{server_id}"
       exit 1
     end
+  elsif server_id
+    puts "retaining temporary server #{server_id}; delete it after #{(server_created_at + 3600).utc.iso8601}"
+    puts "delete command: #{HCLOUD} server delete #{server_id}"
   end
 end

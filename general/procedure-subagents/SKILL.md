@@ -15,7 +15,7 @@ The target repository is read-only during this workflow. Do not run `git commit`
 
 Use the executable helper in `scripts/run` for a repeatable Ensons run. It uses the official `/home/devops/.local/bin/hcloud` shim, which obtains the Hetzner token through the configured 1Password environment. The default host uses Ubuntu 24.04, `cx23`, `fsn1`, firewall `11690281`, and both SSH keys `agent-computer` and `orange.halo.hetzner.de`.
 
-The helper always deletes the server in its cleanup path. If it stops unexpectedly, inspect Hetzner immediately and delete any server it created before doing other work.
+Hetzner charges a minimum of one hour for a server. Never delete a newly created server in the cleanup path before that hour has elapsed. Keep a failed host available for diagnosis and retry; print its ID and address so the operator can use it. Delete it only after the first billable hour, or when the operator explicitly accepts the wasted minimum charge.
 
 Use the cheapest available x86 server in Falkenstein that meets the job's actual requirements. For the ordinary Ensons test workflow, that means at least 2 vCPUs, 4 GB RAM, and 40 GB disk; use `cx23` as the normal starting point and move up only when the run proves that it needs more. Do not default to a larger server for convenience, and do not use an ARM type when the repository's images or browser dependencies require x86.
 
@@ -31,4 +31,4 @@ Treat the Minitest summary as authoritative. The repository's `bin/tests` wrappe
 
 Subagents may inspect the disposable checkout and run tests. Do not permit them to commit, rebase, merge, push, create worktrees, or open a PR while the read-only rule is in force. Keep their work bounded to the requested investigation and retain the real test output.
 
-The workflow is not complete merely because the host was provisioned or a command exited zero; it is complete only when the requested evidence was collected and the disposable server was removed.
+The workflow is not complete merely because the host was provisioned or a command exited zero; it is complete only when the requested evidence was collected. Server deletion is a separate cleanup action and must respect the first billable hour.
