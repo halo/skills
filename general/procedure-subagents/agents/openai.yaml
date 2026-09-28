@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestra disposable workbench"
+  short_description: "Run read-only repository work on a cheap Hetzner workbench"
+  default_prompt: "Use $procedure-subagents to run repository work on the cheapest suitable Falkenstein host without mutating the checkout."

@@ -1,19 +1,19 @@
 ---
-name: procedure-ensons-subagent
-description: Run or orchestrate read-only ensons work on a disposable Hetzner host through Bedrock Ansible.
+name: procedure-subagents
+description: Run or coordinate read-only repository work on disposable Hetzner hosts through Bedrock Ansible.
 ---
 
 # Orchestra disposable workbench
 
-Use this skill when Orchestra needs to test or inspect `ensons/ensons` on a temporary Ubuntu host, or asks to use a subagent for that work.
+Use this skill when Orchestra needs subagents to test or inspect a DevOps/Ensons-related repository on a temporary Ubuntu host. The current helper implements the Ensons test workflow; related repositories may add their own Bedrock role and test command under the same procedure.
 
 ## Non-negotiable boundary
 
-The ensons repository is read-only. Do not run `git commit`, `git push`, `git merge`, `git rebase`, `git worktree`, or any equivalent mutation in that repository. Do not ask a subagent to create a PR from it. A disposable clone is for inspection and testing only.
+The target repository is read-only during this workflow. Do not run `git commit`, `git push`, `git merge`, `git rebase`, `git worktree`, or any equivalent mutation in it. Do not ask a subagent to create a PR from it. A disposable clone is for inspection and testing only.
 
 ## Provisioning
 
-Use the executable helper in `scripts/run` for a repeatable run. It uses the official `/home/devops/.local/bin/hcloud` shim, which obtains the Hetzner token through the configured 1Password environment. The default host uses Ubuntu 24.04, `cpx32`, `fsn1`, firewall `11690281`, and both SSH keys `agent-computer` and `orange.halo.hetzner.de`.
+Use the executable helper in `scripts/run` for a repeatable Ensons run. It uses the official `/home/devops/.local/bin/hcloud` shim, which obtains the Hetzner token through the configured 1Password environment. The default host uses Ubuntu 24.04, `cx23`, `fsn1`, firewall `11690281`, and both SSH keys `agent-computer` and `orange.halo.hetzner.de`.
 
 The helper always deletes the server in its cleanup path. If it stops unexpectedly, inspect Hetzner immediately and delete any server it created before doing other work.
 
@@ -21,7 +21,7 @@ Use the cheapest available x86 server in Falkenstein that meets the job's actual
 
 ## Remote changes and tests
 
-All changes on the temporary host go through the Bedrock Ansible role `ansible/roles/ensons-test` and `ansible/playbooks/agents.yml --tags ensons_test`. Do not install packages, copy secrets, clone the repository, or edit files with ad hoc SSH commands.
+For the current Ensons workflow, all changes on the temporary host go through the Bedrock Ansible role `ansible/roles/ensons-test` and `ansible/playbooks/agents.yml --tags ensons_test`. Related repository workflows must likewise use their Bedrock role and playbook. Do not install packages, copy secrets, clone the repository, or edit files with ad hoc SSH commands.
 
 The role clones the live GitHub repository over SSH into `/data/ensons`, copies the controller-provided `.env.test` through Ansible, installs the pinned Ruby, Node, pnpm, and Playwright dependencies on the host, and starts only the repository's Docker Compose dependencies. Chromium and all tests run directly on Ubuntu.
 
