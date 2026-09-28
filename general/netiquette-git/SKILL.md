@@ -1,6 +1,6 @@
 ---
 name: netiquette-git
-description: (Not implemented yet)
+description: Apply safe Git collaboration and history-rewrite conventions.
 ---
 
 # Levels of permissions
