@@ -3,9 +3,9 @@ name: procedure-ensons-subagent
 description: Run or orchestrate read-only ensons work on a disposable Hetzner host through Bedrock Ansible.
 ---
 
-# Disposable ensons workflow
+# Orchestra disposable workbench
 
-Use this skill when a request involves testing or inspecting `ensons/ensons` on a temporary Ubuntu host, or asks to use a subagent for that work.
+Use this skill when Orchestra needs to test or inspect `ensons/ensons` on a temporary Ubuntu host, or asks to use a subagent for that work.
 
 ## Non-negotiable boundary
 
@@ -16,6 +16,8 @@ The ensons repository is read-only. Do not run `git commit`, `git push`, `git me
 Use the executable helper in `scripts/run` for a repeatable run. It uses the official `/home/devops/.local/bin/hcloud` shim, which obtains the Hetzner token through the configured 1Password environment. The default host uses Ubuntu 24.04, `cpx32`, `fsn1`, firewall `11690281`, and both SSH keys `agent-computer` and `orange.halo.hetzner.de`.
 
 The helper always deletes the server in its cleanup path. If it stops unexpectedly, inspect Hetzner immediately and delete any server it created before doing other work.
+
+Use the cheapest available x86 server in Falkenstein that meets the job's actual requirements. For the ordinary Ensons test workflow, that means at least 2 vCPUs, 4 GB RAM, and 40 GB disk; use `cx23` as the normal starting point and move up only when the run proves that it needs more. Do not default to a larger server for convenience, and do not use an ARM type when the repository's images or browser dependencies require x86.
 
 ## Remote changes and tests
 

@@ -13,7 +13,7 @@ SSH_KEY_REFERENCE = "op://agent-computer/SSH Key/private key?ssh-format=openssh"
 
 options = {
   name: "ensons-test-#{Time.now.utc.strftime("%Y%m%d%H%M%S")}-#{SecureRandom.hex(3)}",
-  server_type: "cpx32",
+  server_type: "cx23",
   image: "ubuntu-24.04",
   location: "fsn1",
   firewall: "11690281",

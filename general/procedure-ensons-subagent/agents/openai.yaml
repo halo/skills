@@ -1,4 +1,4 @@
 interface:
-  display_name: "Ensons disposable test workflow"
-  short_description: "Run read-only ensons tests on a disposable Hetzner host"
-  default_prompt: "Use $procedure-ensons-subagent to run the ensons test workflow without mutating the ensons repository."
+  display_name: "Orchestra disposable workbench"
+  short_description: "Run read-only ensons tests on a cheap Hetzner workbench"
+  default_prompt: "Use $procedure-ensons-subagent to run the ensons test workflow on the cheapest suitable Falkenstein host without mutating the ensons repository."
