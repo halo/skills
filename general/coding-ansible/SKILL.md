@@ -20,3 +20,5 @@ description: Conventions for maintainable Ansible roles, playbooks, paths, and r
 # Do's and Don'ts
 
 - Do not use Ansible to clean up old state, like when you renamed a service, don't add a step to stop the old service, that's just noise. Instead, kill the service manually and then run ansible to establish the new service.
+- Do not hide failures with `failed_when: false`, `ignore_errors`, or `rescue`/`always` cleanup paths. Ansible runs must fail at the first unexpected state; use assertions and explicit preconditions when a state is required.
+- A `failed_when` expression is appropriate only when it makes a concrete validation stricter than the module's normal failure behavior. It must never turn an expected command failure into success.
