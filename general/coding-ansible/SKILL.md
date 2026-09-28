@@ -1,6 +1,6 @@
 ---
 name: coding-ansible
-description: Some rules we have for ansible rules.
+description: Conventions for maintainable Ansible roles, playbooks, paths, and real-run verification.
 ---
 
 # Ansible
@@ -8,6 +8,14 @@ description: Some rules we have for ansible rules.
 # General advise
 
 - Writing changes to ansible roles is first "complete", when an actual ansible run did what the change intended.
+- Keep playbooks in the Ansible repository under `ansible/playbooks/`. Skills and application repositories may invoke Ansible, but must not carry their own playbooks.
+
+# Paths and variables
+
+- Prefer the established fixed server paths directly in tasks and templates. They are part of the machine contract, not configuration knobs.
+- Do not add a variable to `roles/*/defaults/main.yml` when it is used in only one place. Inline the value instead; one-use indirection is strictly forbidden in first-party roles.
+- Keep a variable only when it represents a real supported variation, is used in multiple places, or is an intentional public role input. Before adding one, search all references and state why callers need to override it.
+- When an existing one-use variable adds no real choice, replace it with the fixed value and remove the default. A focused mass search-and-replace is preferable to preserving needless configuration surface.
 
 # Do's and Don'ts
 
