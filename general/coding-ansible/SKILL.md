@@ -13,9 +13,12 @@ description: Conventions for maintainable Ansible roles, playbooks, paths, and r
 # Paths and variables
 
 - Prefer the established fixed server paths directly in tasks and templates. They are part of the machine contract, not configuration knobs.
+- Treat `roles/*/defaults/main.yml` as exceptional in first-party roles, not as standard scaffolding. Avoid creating the file unless the role intentionally exposes a supported public input that callers genuinely need to override.
+- The reason is maintainability: defaults hide the machine contract, add indirection, imply configurability that may not exist, and make simple mass changes harder to reason about. Strong fixed conventions are preferable on this path.
 - Do not add a variable to `roles/*/defaults/main.yml` when it is used in only one place. Inline the value instead; one-use indirection is strictly forbidden in first-party roles.
 - Keep a variable only when it represents a real supported variation, is used in multiple places, or is an intentional public role input. Before adding one, search all references and state why callers need to override it.
 - When an existing one-use variable adds no real choice, replace it with the fixed value and remove the default. A focused mass search-and-replace is preferable to preserving needless configuration surface.
+- Do not apply this convention by rewriting vendored or third-party roles; keep their upstream interface intact.
 
 # Do's and Don'ts
 
