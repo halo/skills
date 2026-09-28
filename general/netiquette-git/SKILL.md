@@ -5,6 +5,12 @@ description: (Not implemented yet)
 
 # Levels of permissions
 
+## History hygiene
+
+- When a local branch and its remote have diverged, prefer rebasing replayable local commits onto the current remote tip instead of creating a synchronization merge commit. Keep `main` linear unless a merge is intentional and meaningful.
+- Never rewrite published remote history by default. If the user explicitly asks to repair an accidental merge, verify the remote tip first, preserve unrelated working-tree changes, rebase the intended commits, and use `git push --force-with-lease` rather than an unconditional force push. Report the rewritten commit IDs.
+- Use a merge commit only when both lines of history are intentionally retained or the project’s documented policy requires it.
+
 ## Default (most restrictive)
 
 - By default, never use git stash, checkout, worktree, commit, or push, etc. (destructive operations).
@@ -27,4 +33,4 @@ description: (Not implemented yet)
 
 - If you are asked to work on a feature in repositories fully autonomous (e.g. that are on a server and not in critical production use, or explicitly told to work autonomously), you are in this least restrictive permission level.
 - It suggests that you "own" the repositories (at least for the time being), you may use branches, worktrees and push freely to Github, even to the `main` branch. Indeed, you should push it pro-actively.
-- Just never override git history on Github (we might actually loose things!)
+- Do not override GitHub history by default; an explicit user request to repair a known history mistake is the exception, and still requires `--force-with-lease` plus a verified remote tip.
