@@ -296,7 +296,7 @@ end
 ## Commenting
 
 Commenting rules are language-agnostic and live in their own skill:
-read [`skills/commenting/SKILL.md`](../commenting/SKILL.md) whenever you write or review comments.
+read [`coding-commenting/SKILL.md`](../coding-commenting/SKILL.md) whenever you write or review comments.
 
 ## Method structure in Rails Controllers
 
