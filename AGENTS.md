@@ -42,7 +42,7 @@ If the ENV var $OPENCLAW_SERVICE_MARKER is set
 ## Core Rules
 
 - If a task matches a skill, you MUST invoke it
-- Skills are located in `skills/<skill-name>/SKILL.md`
+- Skills are located in `<skill-name>/SKILL.md` at the repository root.
 - Never implement directly if a skill applies
 - Always follow the skill instructions exactly (do not partially apply them)
 
