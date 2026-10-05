@@ -11,6 +11,8 @@ Use this skill when Orchestra needs subagents to test or inspect a DevOps/Ensons
 
 The target repository is read-only during this workflow. Do not run `git commit`, `git push`, `git merge`, `git rebase`, `git worktree`, or any equivalent mutation in it. Do not ask a subagent to create a PR from it. A disposable clone is for inspection and testing only.
 
+CI and test execution are lab-only. Run CI/test commands for Ensons repositories only on designated lab servers through Herdr and Bedrock. Never run them on the controller/orchestrator machine or a hosted runner, and do not fall back to another host if a lab is unavailable; stop and report instead. Do not manually dispatch or rerun hosted GitHub workflows for these repositories.
+
 This skill authorizes inspection and testing only. If the task needs code changes, use a separate write-enabled workflow and checkout; do not relax the disposable-host boundary.
 
 ## Orchestrator conducts the work
@@ -32,6 +34,11 @@ For PR work, the orchestrator checks GitHub notifications and the live review th
 Never resolve a review thread without either (a) changing and verifying the code to address the comment on the current PR head, or (b) replying with a concise, evidence-based explanation of why the requested change is unnecessary or already satisfied. If neither applies, leave the thread open and ask the user for direction.
 
 For PR review work, have subagents return candidate findings with the changed file and line, concrete evidence, and a short suggested comment. The orchestrator checks existing review threads, removes duplicates, and prepares one batched inline review with the appropriate verdict. Show the exact draft and obtain the user's approval before submitting it. Do not turn subagent progress updates or findings into separate public comments.
+
+The user owns merging. Never merge a PR unless the user explicitly authorizes that specific merge; requests to address, approve, or “land” changes do not authorize merging by themselves. When the user says they handle merges, leave the PR open for them.
+For `ensons/ensons`, only humans merge code into `master`, and they do so from a pull request. Never push code directly to `master` or merge an `ensons/ensons` pull request.
+
+Before approving a review or resolving a thread, verify each actionable request against the current code and tests. Do not treat a reply or rationale as a substitute for a requested code change.
 
 ## Provisioning
 
