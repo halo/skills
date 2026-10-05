@@ -11,6 +11,8 @@ Use this skill when Orchestra needs subagents to test or inspect a DevOps/Ensons
 
 The target repository is read-only during this workflow. Do not run `git commit`, `git push`, `git merge`, `git rebase`, `git worktree`, or any equivalent mutation in it. Do not ask a subagent to create a PR from it. A disposable clone is for inspection and testing only.
 
+CI and test execution are lab-only. Run CI/test commands for Ensons repositories only on designated lab servers through Herdr and Bedrock. Never run them on the controller/orchestrator machine or a hosted runner, and do not fall back to another host if a lab is unavailable; stop and report instead. Do not manually dispatch or rerun hosted GitHub workflows for these repositories.
+
 This skill authorizes inspection and testing only. If the task needs code changes, use a separate write-enabled workflow and checkout; do not relax the disposable-host boundary.
 
 ## Orchestrator conducts the work
