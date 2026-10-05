@@ -33,6 +33,10 @@ Never resolve a review thread without either (a) changing and verifying the code
 
 For PR review work, have subagents return candidate findings with the changed file and line, concrete evidence, and a short suggested comment. The orchestrator checks existing review threads, removes duplicates, and prepares one batched inline review with the appropriate verdict. Show the exact draft and obtain the user's approval before submitting it. Do not turn subagent progress updates or findings into separate public comments.
 
+The user owns merging. Never merge a PR unless the user explicitly authorizes that specific merge; requests to address, approve, or “land” changes do not authorize merging by themselves. When the user says they handle merges, leave the PR open for them.
+
+Before approving a review or resolving a thread, verify each actionable request against the current code and tests. Do not treat a reply or rationale as a substitute for a requested code change.
+
 ## Provisioning
 
 Use the executable helper in `scripts/run` for a repeatable Ensons run. It uses the official `/home/devops/.local/bin/hcloud` shim, which obtains the Hetzner token through the configured 1Password environment. The default host uses Ubuntu 24.04, `cx23`, `fsn1`, firewall `11690281`, and both SSH keys `agent-computer` and `orange.halo.hetzner.de`.
