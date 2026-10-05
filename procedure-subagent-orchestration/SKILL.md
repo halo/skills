@@ -1,5 +1,5 @@
 ---
-name: procedure-subagents
+name: procedure-subagent-orchestration
 description: Run or coordinate repository work on disposable VPS hosts through Bedrock Ansible.
 ---
 
