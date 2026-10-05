@@ -1,6 +1,6 @@
 ---
 name: procedure-subagents
-description: Run or coordinate read-only repository work on disposable Hetzner hosts through Bedrock Ansible.
+description: Run or coordinate repository work on disposable VPS hosts through Bedrock Ansible.
 ---
 
 # Orchestra disposable workbench
