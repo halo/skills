@@ -36,6 +36,7 @@ Never resolve a review thread without either (a) changing and verifying the code
 For PR review work, have subagents return candidate findings with the changed file and line, concrete evidence, and a short suggested comment. The orchestrator checks existing review threads, removes duplicates, and prepares one batched inline review with the appropriate verdict. Show the exact draft and obtain the user's approval before submitting it. Do not turn subagent progress updates or findings into separate public comments.
 
 The user owns merging. Never merge a PR unless the user explicitly authorizes that specific merge; requests to address, approve, or “land” changes do not authorize merging by themselves. When the user says they handle merges, leave the PR open for them.
+For `ensons/ensons`, only humans merge code into `master`, and they do so from a pull request. Never push code directly to `master` or merge an `ensons/ensons` pull request.
 
 Before approving a review or resolving a thread, verify each actionable request against the current code and tests. Do not treat a reply or rationale as a substitute for a requested code change.
 
