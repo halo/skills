@@ -7,7 +7,9 @@ description: Run local and remote commands in Herdr workspaces, tabs, and panes,
 
 The Herder CLI usage skill can be read with `herder --skill` in stdout.
 
-A missing `HERDR_ENV` in a shell subprocess alone does not establish that Herdr has no caller context; ask Herdr for the current pane and use its response.
+A missing `HERDR_ENV` in a shell subprocess alone does not establish that Herdr has no caller context. Codex commands can lose pane-injected environment variables even while running in a Herdr pane ([issue #1582](https://github.com/herdrdev/herdr/issues/1582)). Herdr also has a related report about Codex 0.157 losing session identity; that report describes a different symptom ([issue #4649](https://github.com/herdrdev/herdr/issues/4649)).
+
+When the variable is absent, ask Herdr for the current pane and use its response instead of concluding that the caller is outside Herdr. Herdr's [integration documentation](https://herdr.dev/docs/integrations/) describes the pane environment variables available to child processes.
 
 ## Choose a level of abstraction for the work
 
