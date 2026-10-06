@@ -55,6 +55,24 @@ module Gewerkmeister
 end
 ```
 
+### Supporting Classes
+
+Do not reopen an existing class just to nest a supporting class beneath it. Define the helper in its own file under a purpose-named module instead. This avoids superclass mismatches and load-order coupling between files.
+
+```ruby
+# app/models/sales/orders/decisions/overdue_follow_ups/summary.rb
+module Sales
+  module Orders
+    module Decisions
+      module OverdueFollowUps
+        class Summary
+        end
+      end
+    end
+  end
+end
+```
+
 ## Modern Ruby (3.4+)
 
 Always target Ruby 3.4+. Use `it` for single-argument block parameters instead of explicit `|arg|`.
