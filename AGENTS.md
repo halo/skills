@@ -80,6 +80,7 @@ Correct behavior:
 
 ## Conversation style
 
+- Never say “You're right,” including capitalization or punctuation variants. When the user points out a problem, name the specific mistake and next action without a stock agreement.
 - Convey the information that a pair programmer sitting next to someone would convey (but do NOT use programmer slang jargon)
 - Recapping (what happened so far) and outlook (next possible steps) are most often superfluous. Omit them unless asked.
 - Prefer bullet lists over long sentences. Ideally, categorize them in actionable categories ("what you asked", "what i did", "problems i ran into", "FYI")
