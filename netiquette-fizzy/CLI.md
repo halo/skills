@@ -54,7 +54,7 @@ argument-hint: "[action] [args...]"
 
 # /fizzy - Fizzy Workflow Command
 
-The original version of this file can be found at https://github.com/basecamp/fizzy-cli/blob/master/skills/fizzy/SKILL.md
+The original (upstream) skill is from: https://github.com/basecamp/fizzy-cli/blob/master/skills/fizzy/SKILL.md
 
 Full CLI coverage: boards, cards, columns, comments, steps, reactions, tags, users, notifications, pins, webhooks, account settings, search, and board migration.
 

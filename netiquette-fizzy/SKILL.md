@@ -5,7 +5,7 @@ description: Interact with Fizzy via the Fizzy CLI.
 
 # Fizzy
 
-Read `./CLI-SKILL.md` to learn about Fizzy CLI and its data structures (the original is at https://github.com/basecamp/fizzy-cli/blob/master/skills/fizzy/SKILL.md)
+Read `./CLI.md` to learn about Fizzy CLI commands and their data structures.
 
 ## Overview
 
