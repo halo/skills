@@ -60,15 +60,16 @@ end
 Do not reopen an existing class just to nest a supporting class beneath it. Define the helper in its own file under a purpose-named module instead. This avoids superclass mismatches and load-order coupling between files.
 
 ```ruby
-# app/models/sales/orders/decisions/overdue_follow_ups/summary.rb
-module Sales
-  module Orders
-    module Decisions
-      module OverdueFollowUps
-        class Summary
-        end
-      end
-    end
+# Bad — reopening a singular class to nest the supporting class
+class Order
+  class Summary
+  end
+end
+
+# Good — a plural module, with the supporting class in its own file
+# app/models/orders/summary.rb
+module Orders
+  class Summary
   end
 end
 ```
