@@ -112,7 +112,7 @@ begin
     "ANSIBLE_ROLES_PATH" => "#{BEDROCK}/ansible/roles",
     "ANSIBLE_HOST_KEY_CHECKING" => "False"
   }
-  secrets = ["sudo", "-n", "#{BEDROCK}/bin/secrets", "--agents", "--", "env"]
+  secrets = ["sudo", "-n", "#{BEDROCK}/bin/secrets", "--operator", "--", "env"]
   ansible_prefix = [
     *secrets,
     *ansible_env.map { |name, value| "#{name}=#{value}" },
